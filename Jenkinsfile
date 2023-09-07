@@ -20,6 +20,7 @@ pipeline {
         // }
         stage('Git clone branch') {
           echo 'project dir ${repoName}'
+          echo 'changed'
           // withCredentials([
           //     sshUserPrivateKey(
           //       credentialsId: sshCredential,
