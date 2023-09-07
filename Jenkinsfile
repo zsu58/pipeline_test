@@ -16,6 +16,7 @@ node {
       //     build.checkout(branch, repoURL)
       //   }
       // }
+
       stage('Git clone branch') {
         withCredentials([
             sshUserPrivateKey(
@@ -35,31 +36,31 @@ node {
             sshCommand remote: remote, command: "[ ! -d '${projectDirectory}' ] && mkdir -p ${projectDirectory} && cd ${projectDirectory} && git clone https://github.com/zsu58/pipeline_test . || true"
           }
       }
-      // stage('Git Pull Remote') {
-      //   withCredentials([
-      //       sshUserPrivateKey(
-      //         credentialsId: sshCredential,
-      //         keyFileVariable: 'keyfile',
-      //         usernameVariable: 'username'
-      //       )
-      //     ]) {
-      //       def remote = [:]
-      //       remote.name = "remote-${deployHost}-${repoName}"
-      //       remote.pty = true
-      //       remote.host = deployHost
-      //       remote.allowAnyHosts = true
-      //       remote.user = username
-      //       remote.identityFile = keyfile
-      //       echo "${branch}"
 
-      //       sshCommand remote: remote, command: "cd ${projectDirectory}; git checkout ${branch}"
-      //       sshCommand remote: remote, command: "cd ${projectDirectory}; git fetch origin"
-      //       sshCommand remote: remote, command: "cd ${projectDirectory}; git reset --hard origin/${branch}"
-      //       sshCommand remote: remote, command: "cd ${projectDirectory}; git pull"
-            
-      //     }
+      stage('Git Pull Remote') {
+        withCredentials([
+            sshUserPrivateKey(
+              credentialsId: sshCredential,
+              keyFileVariable: 'keyfile',
+              usernameVariable: 'username'
+            )
+          ]) {
+            def remote = [:]
+            remote.name = "remote-${deployHost}-${repoName}"
+            remote.pty = true
+            remote.host = deployHost
+            remote.allowAnyHosts = true
+            remote.user = username
+            remote.identityFile = keyfile
+            echo "${branch}"
 
-      // }
+            sshCommand remote: remote, command: "cd ${projectDirectory}; git checkout ${branch}"
+            sshCommand remote: remote, command: "cd ${projectDirectory}; git fetch origin"
+            sshCommand remote: remote, command: "cd ${projectDirectory}; git reset --hard origin/${branch}"
+            sshCommand remote: remote, command: "cd ${projectDirectory}; git pull"
+          }
+      }
+
       // stage('Generate workflows') {
       //     withCredentials([
       //         sshUserPrivateKey(
